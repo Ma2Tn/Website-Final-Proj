@@ -1,0 +1,16 @@
+{% load static %}
+
+<li>
+  <article class="product">
+    <a href="{% url "product-detail-page" product.slug %}">
+      <img src="{% static "store/images/"|add:product.image %}" alt={{ product.title }}
+      />
+      <div class="product__content">
+        <h3>{{ product.title }}</h3>
+        <p>
+           {{ product.description }}
+        </p>
+      </div>
+    </a>
+  </article>
+</li>
