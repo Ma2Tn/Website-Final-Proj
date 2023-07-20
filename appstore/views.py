@@ -15,7 +15,6 @@ from django.contrib.auth.models import Group
 from appstore.decorators import unauthenticated_user
 from .decorators import unauthenticated_user, allowed_users, admin_only
 
-from appstore.filters import OrderFilter
 
 from .models import *
 
@@ -109,11 +108,10 @@ def product_detail(request, slug):
   return render(request, "store/product_detail.html", {
     "product": identified_product
   })
- 
+
+@unauthenticated_user
 def registerPage(request): 
-    if request.user.is_authenticated:
-        return redirect('home')
-    else:
+  
       form = CreateUserForm()
       if request.method == 'POST':
             form = CreateUserForm(request.POST)
