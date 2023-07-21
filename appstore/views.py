@@ -15,7 +15,6 @@ from django.contrib.auth.models import Group
 from appstore.decorators import unauthenticated_user
 from .decorators import unauthenticated_user, allowed_users, admin_only
 
-
 from .models import *
 
 from .forms import OrderForm, CreateUserForm, CustomerForm
@@ -89,46 +88,50 @@ def get_date(product):
   return product['date']
 
 
-@login_required(login_url = 'login')
-def starting_page(request): 
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def products(request):
+  products = Product.objects.all()
+  return render(request, 'appstore/products.html', {'products':products})
+  
+  
+
+def product_detail(request, slug):
+  identified_product = next(product for product in all_products if product['slug'] == slug)
+  return render(request, "appstore/product_detail.html", {
+    "product": identified_product
+  })
+
+
+def registerPage(request): 
+	if request.user.is_authenticated:
+		return redirect('home')
+	else:
+		form = CreateUserForm()
+		if request.method == 'POST':
+			form = CreateUserForm(request.POST)
+			if form.is_valid():
+				form.save()
+				user = form.cleaned_data.get('username')
+				messages.success(request, 'Account was created for ' + user)
+
+				return redirect('login')
+			
+
+		context = {'form':form}
+		return render(request, 'appstore/register.html', context)    
+   
+def starting_page(request):
   sorted_products = sorted(all_products, key=get_date)
   latest_products = sorted_products[-3:]
   return render(request, "store/index.html", {
     "products": latest_products
   })
-
-def products(request):
-  return render(request, "store/all_products.html", {
-    "all_products": all_products
-  })
   
-
-def product_detail(request, slug):
-  identified_product = next(product for product in all_products if product['slug'] == slug)
-  return render(request, "store/product_detail.html", {
-    "product": identified_product
-  })
-
-@unauthenticated_user
-def registerPage(request): 
-  
-      form = CreateUserForm()
-      if request.method == 'POST':
-            form = CreateUserForm(request.POST)
-            if form.is_valid():
-                user = form.save()
-                username = form.cleaned_data.get('username')
-                group = Group.objects.get(name = 'customer')
-                user.groups.add(group)
-                messages.success(request, 'Account was created for ' + username)
-                
-                return redirect('login')
-
-      context = {'form':form}
-      return render(request, 'appstore/register.html', context)
-
+   
 @login_required(login_url='login') 
-@admin_only
 def home(request):
 	orders = Order.objects.all()
 	customers = Customer.objects.all()
@@ -151,9 +154,7 @@ def userPage(request):
 
 @unauthenticated_user  
 def loginPage(request):
-   if request.user.is_authenticated:
-      return redirect('home')
-   else:
+  
       if request.method == 'POST':
           username =  request.POST.get('username')
           password =  request.POST.get('password')
@@ -167,7 +168,7 @@ def loginPage(request):
                   messages.info(request, 'Username OR password is incorrect')
                   
           context = {}
-          return render(request, 'appstore/logins.html', context)
+          return render(request, 'appstore/login.html', context)
   
 def logoutUser(request):
     logout(request)
@@ -190,9 +191,18 @@ def accountSettings(request):
     context = {}
     return render(request, 'appstore/account_settings.html', context)
 
+def starting_page(request):
+  sorted_products = sorted(all_products, key=get_date)
+  latest_products = sorted_products[-3:]
+  return render(request, "store/index.html", {
+    "products": latest_products
+  })
+
+
+
+
 @login_required(login_url = 'login')
 @allowed_users(allowed_roles = ['admin'])
-
 def customer(request, pk_test):
   customer = Customer.objects.get(id=pk_test)
   
@@ -200,8 +210,6 @@ def customer(request, pk_test):
   order_count = orders.count()
   
   myFilter = OrderFilter(request.GET, queryset = orders)
-  
-  myFilter = OrderFilter()
   orders = myFilter.qs 
   
   context = {'customer':customer, 'orders':orders, 'order_count': order_count, 'myFilter':myFilter}

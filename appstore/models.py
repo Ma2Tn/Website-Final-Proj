@@ -21,6 +21,9 @@ class Customer(models.Model):
     
 class Tag(models.Model):
         name = models.CharField(max_length=200, null=True)   
+        
+        def __str__(self):
+                return self.name
 
 class Product(models.Model):
     CATEGORY = (
@@ -38,7 +41,8 @@ class Product(models.Model):
     tags = models.ManyToManyField(Tag)
 
 
-    
+    def __str__(self):
+                return self.name
 
     
 class Order(models.Model):
