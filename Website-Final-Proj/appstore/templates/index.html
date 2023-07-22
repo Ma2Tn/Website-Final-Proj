@@ -1,0 +1,57 @@
+{% extends "base.html" %} 
+{% load static %}
+
+{% block title %} 
+My Store
+{% endblock %} 
+
+{% block css_files %}
+  <link rel="stylesheet" href="{% static "store/index.css" %}" />
+{% endblock %}
+
+{% block content %}
+<header id="main-navigation">
+  <h1><a href="">My Store</a></h1>
+  <nav>
+    <a href="">All Products</a>
+  </nav>
+</header>
+
+<section id="welcome">
+  <header>
+    <img src="" alt="" />
+    <h2>My Store</h2>
+  </header>
+  <p>Integer sodales convallis interdum. Pellentesque mollis justo sed vestibulum venenatis.</p>
+</section>
+
+<section id="latest-posts">
+  <h2>My Latest Products</h2>
+
+  <ul>
+    <li>
+      <article class="post">
+        <a href="">
+          <img src="" alt="Product Name Something" />
+          <div class="post__content">
+            <h3>Product Name Something</h3>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ultrices diam nec eros euismod pharetra. Cras interdum suscipit nibh, sed hendrerit ex suscipit ut. 
+            </p>
+          </div>
+        </a>
+      </article>
+    </li>
+  </ul>
+</section>
+
+<section id="about">
+  <h2>What I Do</h2>
+  <p>
+    Integer sodales convallis interdum. Pellentesque mollis justo sed vestibulum venenatis.
+  </p>
+  <p>
+    Integer sodales convallis interdum. Pellentesque mollis justo sed vestibulum venenatis.
+  </p>
+</section>
+{% endblock %}
