@@ -103,7 +103,7 @@ def registerPage(request):
 		
 
 	context = {'form':form}
-	return render(request, 'appstore/register.html', context)
+	return render(request, 'appstore/Registers.html', context)
 
 @unauthenticated_user
 def loginPage(request):
@@ -121,7 +121,7 @@ def loginPage(request):
 			messages.info(request, 'Username OR password is incorrect')
 
 	context = {}
-	return render(request, 'appstore/login.html', context)
+	return render(request, 'appstore/Logins.html', context)
 
 def logoutUser(request):
 	logout(request)
@@ -143,11 +143,11 @@ def home(request):
 	'total_orders':total_orders,'delivered':delivered,
 	'pending':pending }
 
-	return render(request, 'appstore/dashboard.html', context)
+	return render(request, 'appstore/Dashboards.html', context)
 
 def userPage(request):
 	context = {}
-	return render(request, 'appstore/user.html', context)
+	return render(request, 'appstore/Users.html', context)
 
 
 @login_required(login_url='login')
@@ -170,7 +170,7 @@ def customer(request, pk_test):
 
 	context = {'customer':customer, 'orders':orders, 'order_count':order_count,
 	'myFilter':myFilter}
-	return render(request, 'appstore/customer.html',context)
+	return render(request, 'appstore/Customers.html',context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['customer']) 
@@ -185,7 +185,7 @@ def accountSettings(request):
       
         
     context = {'form':form}
-    return render(request, 'appstore/account_settings.html', context)
+    return render(request, 'appstore/Account_Settings.html', context)
 
 def get_date(product):
   return product['date']
